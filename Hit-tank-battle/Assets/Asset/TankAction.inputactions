@@ -1,0 +1,54 @@
+{
+    "name": "TankAction",
+    "maps": [
+        {
+            "name": "Tank",
+            "id": "fe4638fa-b022-4bbb-85a6-c95d7f0b5061",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "195ce485-04c3-4325-bcbf-e35591bd6208",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Aim",
+                    "type": "Button",
+                    "id": "03c1a9a7-9a97-4db2-bcbb-c52cc60428be",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "12f8e495-bc4a-4b82-b61d-59296e1d31c1",
+                    "path": "<AndroidJoystick>/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "439a7f25-74dc-4b83-b343-9975e3dd25fe",
+                    "path": "<Touchscreen>/primaryTouch/indirectTouch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
