@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,28 +16,27 @@ public class TankController : Singleton<TankController>
     public ParticleSystem muzzleEffect; // Hiệu ứng muzzle (tia lửa từ nòng súng)
     public float timeBetweenShots = 0.5f; // Thời gian tối thiểu giữa mỗi lần bắn
     public float lastShotTime = 0f; // Thời gian lần bắn cuối cùng
+    public float Hp;
+    public float MaxHp;
+    public float rateHp;
+    public bool isDead => Hp <= 0;
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
 
         // Tự động tìm Joystick trong scene
         _joystick = FindObjectOfType<Joystick>();
-
-        // if (_joystick == null)
-        // {
-        //     Debug.LogError("Không tìm thấy Joystick! Hãy đảm bảo bạn có Joystick trong scene.");
-        // }
+        Hp = MaxHp;
     }
     void Update()
     {
         if (_joystick == null)
         {
             _joystick = FindObjectOfType<Joystick>();
-            
         }
         FindNearestEnemy();
          // Tự động xoay súng về phía kẻ địch gần nhất
-        
+        rateHp = Hp/MaxHp;
     }
     void FixedUpdate()
     {
@@ -57,6 +57,10 @@ public class TankController : Singleton<TankController>
         {
             Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
             _rb.rotation = Quaternion.Slerp(_rb.rotation, toRotation, Time.deltaTime * 3f);
+            SoundManager.Instance.PlayMoveSound();
+        }else
+        {
+            SoundManager.Instance.StopMoveSound();  
         }
         if (_targetEnemy != null)
         {
@@ -92,37 +96,56 @@ public class TankController : Singleton<TankController>
         // Xoay súng từ góc hiện tại tới vị trí mục tiêu
         gun.rotation = Quaternion.Slerp(gun.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
-        public void ShootBullet()
-        {
-             if (bulletPrefab != null && bulletSpawnPoint != null)
+    public void ShootBullet()
     {
-        // Tạo đạn từ prefab tại điểm spawn
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-
-        // Lấy Rigidbody của đạn và bắn nó về phía kẻ thù
-        Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-        if (bulletRb != null)
+        if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            // Tính hướng bắn từ súng đến kẻ thù
-            Vector3 direction = (_targetEnemy.position - bulletSpawnPoint.position).normalized;
+            // Tạo đạn từ prefab tại điểm spawn
+            GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
-            // Đảm bảo đạn không thay đổi theo chiều cao (Y)
-            direction.y = 0;
+            // Lấy Rigidbody của đạn và bắn nó về phía kẻ thù hoặc theo hướng hiện tại
+            Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
+            if (bulletRb != null)
+            {
+                Vector3 direction;
 
-            // Gán tốc độ cho đạn
-            bulletRb.velocity = direction * bulletSpeed;
+                // Kiểm tra nếu có targetEnemy (kẻ thù), bắn về phía kẻ thù
+                if (_targetEnemy != null)
+                {
+                    // Tính hướng bắn từ súng đến kẻ thù
+                    direction = (_targetEnemy.position - bulletSpawnPoint.position).normalized;
+                }
+                else
+                {
+                    // Nếu không có targetEnemy, bắn theo hướng hiện tại của súng
+                    direction = bulletSpawnPoint.forward;  // forward là hướng mà nòng súng đang hướng đến
+                }
 
-            // Xoay đạn theo hướng của súng nhưng giữ nguyên tọa độ Y
-            Quaternion bulletRotation = Quaternion.LookRotation(direction);
-            bullet.transform.rotation = bulletRotation; // Xoay đạn về hướng bắn
-            bullet.transform.position = new Vector3(bullet.transform.position.x, bulletSpawnPoint.position.y, bullet.transform.position.z); // Giữ nguyên Y
-        }
+                // Đảm bảo đạn không thay đổi theo chiều cao (Y)
+                direction.y = 0;
 
-        // Chạy hiệu ứng muzzle (tia lửa từ nòng súng)
-        if (muzzleEffect != null)
-        {
-            muzzleEffect.Play(); // Bật hiệu ứng muzzle khi bắn
+                // Gán tốc độ cho đạn
+                bulletRb.velocity = direction * bulletSpeed;
+
+                // Xoay đạn theo hướng bắn nhưng giữ nguyên tọa độ Y
+                Quaternion bulletRotation = Quaternion.LookRotation(direction);
+                bullet.transform.rotation = bulletRotation; // Xoay đạn về hướng bắn
+                bullet.transform.position = new Vector3(bullet.transform.position.x, bulletSpawnPoint.position.y, bullet.transform.position.z); // Giữ nguyên Y
+            }
+
+            // Chạy hiệu ứng muzzle (tia lửa từ nòng súng)
+            if (muzzleEffect != null)
+            {
+                muzzleEffect.Play(); // Bật hiệu ứng muzzle khi bắn
+            }
         }
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("enemyBullet"))
+        {
+            Hp --;
+        }
     }
 }

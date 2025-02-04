@@ -7,15 +7,18 @@ TagManager:
   - Car
   - Wall
   - Enemy
+  - Missile
+  - enemyBullet
+  - Bullet
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Wall
-  - 
+  - Enemy
   - 
   - 
   - 

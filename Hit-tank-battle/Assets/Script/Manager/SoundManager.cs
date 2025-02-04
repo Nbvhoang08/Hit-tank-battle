@@ -2,23 +2,25 @@ using UnityEngine;
 
 public class SoundManager : Singleton<SoundManager> 
 {
-    [Header("Audio Sources")]
-    [SerializeField] private AudioSource musicSource; // Cho background music
-    [SerializeField] private AudioSource clickSource; // Cho Sound click
-    [SerializeField] private AudioSource sfxSource;   // Cho sound effects
+     [Header("Audio Sources")]
+    [SerializeField] private AudioSource musicSource; 
+    [SerializeField] private AudioSource clickSource;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioSource moveSource; // Thêm AudioSource cho âm thanh di chuyển
 
     [Header("Audio Clips")]
-    
     [SerializeField] private AudioClip backgroundMusic;
     [SerializeField] private AudioClip ClickSound;
     [SerializeField] private AudioClip[] VFXSound;
+    [SerializeField] private AudioClip moveSound; // Thêm âm thanh di chuyển
 
     [Header("Volume Settings")]
     [SerializeField][Range(0f, 1f)] private float musicVolume = 0.3f;
     [SerializeField][Range(0f, 1f)] private float sfxVolume = 0.5f;
     [SerializeField][Range(0f, 1f)] private float clickVolume = 0.5f;
-    public bool TurnOn = true;
+    [SerializeField][Range(0f, 1f)] private float moveVolume = 0.5f; // Volume cho âm thanh di chuyển
 
+    public bool TurnOn = true;
 
     public override void Awake()
     {
@@ -26,26 +28,9 @@ public class SoundManager : Singleton<SoundManager>
         InitializeAudio();
         TurnOn = true;
     }
-    private void Update()
-    {
-        if (TurnOn)
-        {
-            // Thiết lập volume
-            musicSource.volume = musicVolume;
-            sfxSource.volume = sfxVolume;
-            clickSource.volume = clickVolume;
-        }
-        else
-        {
-            musicSource.volume = 0;
-            sfxSource.volume = 0;
-            clickSource.volume = clickVolume;
-        }
 
-    }
     private void InitializeAudio()
     {
-        // Tạo và thiết lập AudioSource cho music nếu chưa có
         if (musicSource == null)
         {
             musicSource = gameObject.AddComponent<AudioSource>();
@@ -53,13 +38,13 @@ public class SoundManager : Singleton<SoundManager>
             musicSource.playOnAwake = true;
         }
 
-        // Tạo và thiết lập AudioSource cho sfx nếu chưa có
         if (sfxSource == null)
         {
             sfxSource = gameObject.AddComponent<AudioSource>();
             sfxSource.loop = false;
             sfxSource.playOnAwake = false;
         }
+
         if (clickSource == null)
         {
             clickSource = gameObject.AddComponent<AudioSource>();
@@ -67,60 +52,62 @@ public class SoundManager : Singleton<SoundManager>
             clickSource.playOnAwake = false;
         }
 
-        // Thiết lập volume
+        if (moveSource == null)
+        {
+            moveSource = gameObject.AddComponent<AudioSource>();
+            moveSource.loop = true;  // Loop để phát liên tục
+            moveSource.playOnAwake = false;
+        }
+
         musicSource.volume = musicVolume;
         sfxSource.volume = sfxVolume;
-        sfxSource.volume = clickVolume;
-        // Bắt đầu phát nhạc nền
+        clickSource.volume = clickVolume;
+        moveSource.volume = moveVolume;
+
         if (backgroundMusic != null)
         {
             musicSource.clip = backgroundMusic;
             musicSource.Play();
         }
+
+        if (moveSound != null)
+        {
+            moveSource.clip = moveSound; // Gán âm thanh di chuyển
+        }
     }
 
+    // Hàm Play click sound
     public void PlayClickSound()
     {
         if (ClickSound != null)
         {
-            sfxSource.PlayOneShot(ClickSound,clickVolume);
+            clickSource.PlayOneShot(ClickSound, clickVolume);
         }
     }
+
+    // Hàm Play SFX
     public void PlayVFXSound(int soundIndex)
     {
-        if (VFXSound != null)
+        if (VFXSound != null && soundIndex < VFXSound.Length)
         {
             sfxSource.PlayOneShot(VFXSound[soundIndex], sfxVolume);
         }
     }
 
-
-
-
-    // Các phương thức điều chỉnh âm lượng
-    public void SetMusicVolume(float volume)
+    // **HÀM QUẢN LÝ ÂM THANH DI CHUYỂN**
+    public void PlayMoveSound()
     {
-        musicVolume = Mathf.Clamp01(volume);
-        if (musicSource != null)
+        if (!moveSource.isPlaying) // Kiểm tra xem đã phát hay chưa
         {
-            musicSource.volume = musicVolume;
+            moveSource.Play();
         }
     }
 
-    public void SetSFXVolume(float volume)
+    public void StopMoveSound()
     {
-        sfxVolume = Mathf.Clamp01(volume);
-        if (sfxSource != null)
+        if (moveSource.isPlaying)
         {
-            sfxSource.volume = sfxVolume;
-        }
-    }
-    public void SetClickVolume(float volume)
-    {
-        clickVolume = Mathf.Clamp01(volume);
-        if (clickSource!= null)
-        {
-            clickSource.volume = clickVolume;
+            moveSource.Stop();
         }
     }
 }

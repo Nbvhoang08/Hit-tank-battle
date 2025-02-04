@@ -30,7 +30,7 @@ public class CompleteUI : UIItem
     public void LoadNextScene()
     {
         int lvIndex =  SceneManager.GetActiveScene().buildIndex + 1; // Tăng chỉ số level
-        string nextSceneName = "LV" + lvIndex;
+        string nextSceneName = "Level " + lvIndex;
 
         // Kiểm tra xem scene tiếp theo có tồn tại hay không
         if (Application.CanStreamedLevelBeLoaded(nextSceneName))
