@@ -33,8 +33,8 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		if (_instance != null)
 		{
-			Debug.LogWarning("Already has instance of " + typeof(T));
-			GameObject.Destroy(this.gameObject);
+			//Debug.LogWarning("Already has instance of " + typeof(T));
+			Destroy(gameObject);
 			return;
 		}
 
@@ -43,7 +43,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
 		if (_instance == null)
 		{
-			Debug.LogError("Awake xong van NULL " + typeof(T));
+			//Debug.LogError("Awake xong van NULL " + typeof(T));
 		}
 		//Debug.LogError("Awake of " + typeof(T));
 		if (dontDestroyOnload)

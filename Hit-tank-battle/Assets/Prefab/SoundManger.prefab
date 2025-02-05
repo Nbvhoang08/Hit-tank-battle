@@ -51,7 +51,8 @@ MonoBehaviour:
   moveSource: {fileID: 0}
   backgroundMusic: {fileID: 8300000, guid: 872fa72f8381099438d1504546de3422, type: 3}
   ClickSound: {fileID: 8300000, guid: 520790798a3f55640ac267df635c538d, type: 3}
-  VFXSound: []
+  VFXSound:
+  - {fileID: 8300000, guid: 92d3259b6a9732e4ba3fb95331b2c95d, type: 3}
   moveSound: {fileID: 8300000, guid: 6049f9302d89dea4d9580afa4fb94b92, type: 3}
   musicVolume: 0.3
   sfxVolume: 0.5

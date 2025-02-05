@@ -28,6 +28,7 @@ public class Bullet : MonoBehaviour
         if (_explosionEffect != null)
         {
             Instantiate(_explosionEffect, transform.position, Quaternion.identity);
+             SoundManager.Instance.PlayVFXSound(0);
         }
     }
 }

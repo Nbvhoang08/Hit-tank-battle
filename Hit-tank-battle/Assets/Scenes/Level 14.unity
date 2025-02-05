@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.7864094, g: 0.8717538, b: 0.9531223, a: 1}
+  m_IndirectSpecularColor: {r: 0.35147578, g: 0.48605597, b: 0.641673, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -26349,7 +26349,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1962990031953119131, guid: b81ce72a08e587041a3fbd67557cf49a, type: 3}
       propertyPath: totalEnemiesToSpawn
-      value: 8
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 1962990031953119131, guid: b81ce72a08e587041a3fbd67557cf49a, type: 3}
       propertyPath: spawnPoints.Array.size

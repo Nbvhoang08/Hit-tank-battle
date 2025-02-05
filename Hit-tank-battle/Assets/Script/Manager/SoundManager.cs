@@ -28,6 +28,24 @@ public class SoundManager : Singleton<SoundManager>
         InitializeAudio();
         TurnOn = true;
     }
+    void Update()
+    {
+        if (!TurnOn)
+        {
+            musicSource.volume = 0;
+            sfxSource.volume = 0;
+            clickSource.volume = clickVolume;
+            moveSource.volume = 0;
+        }
+        else
+        {
+            // Thiết lập volume
+            musicSource.volume = musicVolume;
+            sfxSource.volume = sfxVolume;
+            clickSource.volume = clickVolume;
+            moveSource.volume = moveVolume;
+        }
+    }
 
     private void InitializeAudio()
     {
